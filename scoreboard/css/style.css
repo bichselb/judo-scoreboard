@@ -1,0 +1,136 @@
+/*
+Judo Scoreboard for use at judo tournaments.
+Copyright (C) 2023 Benjamin Bichsel
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+body {
+    background-color: #ffffff;
+    /* remove whitespace around scoreboard */
+    padding: 0px;
+    margin: 0px;
+}
+.scoreboard_full { /* the full scoreboard including points and times */
+    /* remove whitespace around scoreboard */
+    border-collapse: collapse;
+    border: 0px;
+    /* use full width and height */
+    width: 100%;
+    height: 100vh;
+}
+.scoreboard_full > tbody > tr > td {
+    padding: 0px;
+    text-align: center;
+}
+
+.scoreboard_fighter_row > td > table { /* the row for a fighter (white/blue) */
+    /* use full width and height */
+    width: 100%;
+    height: 100%;
+}
+
+.scoreboard_time_row { /* the row containing timers (central/osaekomi) */
+    background-color: #124116;
+}
+.scoreboard_time_row > * {
+    color: white;
+}
+.scoreboard_time_row > td > table {
+    /* use full width and height */
+    width: 100%;
+    height: 100%;
+}
+
+.point_title { /* titles like ippon */
+    font-size: 2em;
+    font-weight: bold;
+}
+.point > span {
+    font-size: 13em;
+    font-weight: bold;
+    cursor: pointer;
+    /* avoid changes to overall alignment on double-digits */
+    width: 1.1em;
+    text-align: center;
+    /* display -/+ vertically aligned */
+    vertical-align: middle;
+    display: inline-block;
+}
+.penalty > span { /* custom format for penalties like shido */
+    color: #B00020;
+    font-size: 8em;
+}
+
+.timer { /* format for both timers */
+    /* center the timer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.timer_seconds {
+    font-size: 8em;
+    cursor: pointer;
+}
+.timer_tenths {
+    /* ensure this block does not affect alignment */
+    width: 0;
+    /* prevent newlines */
+    white-space: nowrap;
+}
+.timer_tenths > span {
+    vertical-align: middle;
+}
+#overtime { /* symbol for overtime */
+    font-size: 3em;
+    padding: 0.3em;
+}
+.osaekomi_assign_stress { /* visually highlight the need for assignment */
+    animation: pulse 0.7s ease-in-out infinite;
+    color: #FFFF00;
+    font-weight: bold;
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#enable_view_only { /* switch from editable to view-only */
+    /* put on top right */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 999; /*put element in front*/
+}
+
+#scroll_down {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 999; /*put element in front*/
+}
+
+.optional { /* elements to hide in view-only */
+    display: initial;
+}
+.hidden {
+    display: none !important;
+}

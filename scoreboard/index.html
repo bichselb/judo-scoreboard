@@ -1,0 +1,447 @@
+<!--
+Judo Scoreboard for use at judo tournaments.
+Copyright (C) 2023 Benjamin Bichsel
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Judo Scoreboard</title>
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+</head>
+<body>
+    <table class="scoreboard_full">
+        <tbody>
+            <tr class="scoreboard_fighter_row">
+                <td>
+                    <table style="background-color: #eeeeee">
+                        <tbody>
+                            <tr>
+                                <td style="width:35%">
+                                    <div class="point_title">
+                                        Ippon
+                                    </div>
+                                    <div class="point">
+                                        <button
+                                            onclick="remove_point(0,'ippon')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Ippon (Shift+1)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(0,'ippon')" id="point_0_ippon">NaN</span>
+                                        <button
+                                            onclick="add_point(0,'ippon')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Ippon (1)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                                <td style="width:35%">
+                                    <div class="point_title">
+                                        Wazari
+                                    </div>
+                                    <div class="point">
+                                        <button
+                                            onclick="remove_point(0,'wazari')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Wazari (Shift+2)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(0,'wazari')" id="point_0_wazari">NaN</span>
+                                        <button
+                                            onclick="add_point(0,'wazari')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Wazari (2)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                                <td style="width:30%">
+                                    <div class="point_title">
+                                        Shido
+                                    </div>
+                                    <div class="point penalty">
+                                        <button
+                                            onclick="remove_point(0,'shido')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Shido (Shift+3)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(0,'shido')" id="point_0_shido">NaN</span>
+                                        <button
+                                            onclick="add_point(0,'shido')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Shido (3)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr class="scoreboard_fighter_row">
+                <td>
+                    <table style="background-color: #64a7ff">
+                        <tbody>
+                            <tr>
+                                <td style="width:35%">
+                                    <div class="point_title">
+                                        Ippon
+                                    </div>
+                                    <div class="point">
+                                        <button
+                                            onclick="remove_point(1,'ippon')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Ippon (Shift+4)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(1,'ippon')" id="point_1_ippon">NaN</span>
+                                        <button
+                                            onclick="add_point(1,'ippon')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Ippon (4)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                                <td style="width:35%">
+                                    <div class="point_title">
+                                        Wazari
+                                    </div>
+                                    <div class="point">
+                                        <button
+                                            onclick="remove_point(1,'wazari')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Wazari (Shift+5)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(1,'wazari')" id="point_1_wazari">NaN</span>
+                                        <button
+                                            onclick="add_point(1,'wazari')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Wazari (5)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                                <td style="width:30%">
+                                    <div class="point_title">
+                                        Shido
+                                    </div>
+                                    <div class="point penalty">
+                                        <button
+                                            onclick="remove_point(1,'shido')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Shido (Shift+6)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(1,'shido')" id="point_1_shido">NaN</span>
+                                        <button
+                                            onclick="add_point(1,'shido')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Shido (6)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr class="scoreboard_time_row">
+                <td>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="text-center" style="width: 35%">
+                                    <div class="optional">
+                                        <div class="mb-2">
+                                            <a class="btn btn-success btn-lg" onclick="reset_all()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reset all (Enter)">
+                                                <i class="fa fa-rotate"></i>
+                                                <span id="reset_all_default_time">NaN</span>
+                                            </a>
+                                            <a class="btn btn-success btn-lg" onclick="golden_score_click()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reset for Golden Score">
+                                                <span>GS</span>
+                                                <span>0:00</span>
+                                            </a>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <div class="input-group" style="width:23em;">
+                                                <input id="central_minutes_input" type="number" min="0" step="1" value="5" class="form-control" placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Minutes">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">:</span>
+                                                </div>
+                                                <input id="central_seconds_input" type="number" min="0" step="1" value="0" class="form-control" placeholder="Seconds" aria-label="Seconds" aria-describedby="Seconds" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seconds">
+                                                <div class="input-group-append">
+                                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                        <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i id="central_reset_toggle_image" class="fa fa-fw fa-rotate"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" onclick="central_reset_toggle('reset')">
+                                                                <i class="fa fa-fw fa-rotate"></i>
+                                                                Set default central clock time & Reset
+                                                            </a></li>
+                                                            <li><a class="dropdown-item" onclick="central_reset_toggle('time')">
+                                                                <i class="fa fa-fw fa-stopwatch"></i>
+                                                                Only set central clock time
+                                                            </a></li>
+                                                            <li><a class="dropdown-item" onclick="central_reset_toggle('GS')">
+                                                                <i class="fa fa-fw">GS</i>
+                                                                Reset for Golden Score
+                                                            </a></li>
+                                                        </ul>
+                                                        <label class="btn btn-success" onclick="set_central_clock()">Set central clock</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <div class="input-group" style="width:17em">
+                                                <input id="osaekomi_seconds_input" type="number" min="0" step="1" value="10" class="form-control" placeholder="Osaekomi seconds" aria-label="Osaekomi seconds" aria-describedby="Osaekomi seconds">
+                                                <button class="btn btn-success" type="button" onclick="apply_osaekomi_seconds()">Set osaekomi clock</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 35%">
+                                    <div class="timer">
+                                        <span id="overtime" style="display: none">
+                                            GS
+                                        </span>
+                                        <span onclick="central_clock_time_click()" id="central_clock_time" class="timer_seconds lh-1">NaN</span>
+                                        <span class="timer_tenths">
+                                            <span >.</span>
+                                            <span id="central_clock_time_tenths">NaN</span>
+                                        </span>
+                                    </div>
+                                    <div class="optional">
+                                        <div class="mb-2">
+                                            <a id="central_clock_pause_continue" class="btn btn-success" onclick="central_clock_pause_continue()" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Hajime (Space)">
+                                                <i id="central_clock_pause_continue_img" class="fa fa-fw fa-play"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 30%">
+                                    <div class="timer" style="color:#0bff18;">
+                                        <span onclick="osaekomi_start_stop()" id="osaekomi_time" class="timer_seconds lh-1">NaN</span>
+                                        <span class="timer_tenths">
+                                            <span>.</span>
+                                            <span id="osaekomi_time_tenths">NaN</span>
+                                        </span>
+                                    </div>
+                                    <div class="optional">
+                                        <div class="mb-2">
+                                            <a id="osaekomi_start_stop" class="btn btn-success" onclick="osaekomi_start_stop()" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Osaekomi (W)">
+                                                <i id="osaekomi_start_stop_img" class="fa fa-fw fa-play"></i>
+                                            </a>
+                                            <a id="osaekomi_reset" class="btn btn-success disabled" onclick="osaekomi_reset()" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Reset (S)">
+                                                <i id="osaekomi_reset_img" class="fa-fw fa fa-arrow-rotate-left"></i>
+                                            </a>
+                                            <a id="osaekomi_pause_continue" class="btn btn-success" onclick="osaekomi_pause_continue()" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Continue">
+                                                <i id="osaekomi_pause_continue_img" class="fa fa-fw fa-play"></i>
+                                            </a>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="input-group d-flex justify-content-center">
+                                                <button
+                                                    class="btn btn-light"
+                                                    type="button"
+                                                    id="osaekomi_assign_0"
+                                                    onclick="osaekomi_assign(0);"
+                                                    style="width: 20%"
+                                                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Assign to white (A)"
+                                                >
+                                                    White
+                                                </button>
+                                                <span id="osaekomi_assign_text" class="input-group-text" style="background-color: transparent; color: white; border: 0px solid transparent; width: 20%; justify-content: center;">«« Tori ? »»</span>
+                                                <button
+                                                    class="btn btn-primary"
+                                                    type="button"
+                                                    id="osaekomi_assign_1"
+                                                    onclick="osaekomi_assign(1);"
+                                                    style="width: 20%"
+                                                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Assign to blue (D)"
+                                                >
+                                                    Blue
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a type="button" class="btn btn-secondary btn-floating optional" id="enable_view_only" href="#view" target="_blank" rel="noopener noreferrer">
+        <i class="fas fa-eye"></i>
+    </a>
+
+	<a type="button" class="btn btn-secondary btn-floating optional" id="scroll_down" onclick="scroll_down()">
+		<i class="fas fa-arrow-down"></i>
+    </a>
+
+    <br>
+
+    <div class="container">
+
+        <h2>Custom changes to rules</h2>
+
+        In the following, you can adapt the scoreboard logic directly by modifying the below JSON configuration. Times are in milliseconds. Osaekomi times ("osaekomi_wazari_time", "osaekomi_ippon_time", "osaekomi_warn_unassigned") can be set to "null" (without the quotation marks) to disable them.
+
+        Adapt the JSON and click "Update and Reset" to apply the changes.
+
+        <div class="form-group">
+            <textarea class="form-control" id="fight_rules" name="fight_rules" rows="10" cols="50">Not loaded...</textarea>
+            <button class="btn btn-primary mt-2" onclick="set_fight_rules(); reset_all()">Update and Reset</button>
+        </div>
+
+        <h2 id="usage">Usage</h2>
+
+        To use this scoreboard in a tournament, proceed as follows:
+
+        <ul>
+            <li>Prepare a laptop and connect it to a second monitor (or projector).</li>
+            <li>Download the webpage source scoreboard.zip from <a href="https://github.com/bichselb/judo-scoreboard/releases/latest">GitHub</a>.</li>
+            <li>Extract the zip to any directory.</li>
+            <li>Open file index.html.</li>
+            <li>Open a new view-only tab by clicking the eye icon.</li>
+            <li>Move the opened tab to the second monitor.</li>
+            <li>Click into the moved tab and press F11 to make the page full
+            screen.</li>
+            <li>Move the mouse back to the original tab and use the scoreboard
+            from there. Most buttons can also be triggered by keyboard
+            shortcuts, which are noted as hover information on the respective
+            buttons. We recommend labeling the keyboard using stickers, such as in <a href="./images/stickers.jpeg">this example</a>.</li>
+        </ul>
+
+        Here is an overview over all keyboard shortcuts:
+
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Action</th>
+                    <th>Keyboard shortcut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hajime</td>
+                    <td>Space (also resets Osaekomi)</td>
+                </tr>
+                <tr>
+                    <td>Mate</td>
+                    <td>Space</td>
+                </tr>
+                <tr>
+                    <td>Osaekomi</td>
+                    <td>W, assign with A or D</td>
+                </tr>
+                <tr>
+                    <td>Toketa</td>
+                    <td>W, optionally reset time with S</td>
+                </tr>
+                <tr>
+                    <td>Ippon</td>
+                    <td>1 (white) or 4 (blue)</td>
+                </tr>
+                <tr>
+                    <td>Wazari</td>
+                    <td>2 (white) or 5 (blue)</td>
+                </tr>
+                <tr>
+                    <td>Shido</td>
+                    <td>3 (white) or 6 (blue)</td>
+                </tr>
+                <tr>
+                    <td>Next fight (reset scoreboard)</td>
+                    <td>Enter</td>
+                </tr>
+                <tr>
+                    <td>Switch to golden score</td>
+                    <td>Use mouse</td>
+                </tr>
+                <tr>
+                    <td>Set fight time</td>
+                    <td>Use mouse</td>
+                </tr>
+                <tr>
+                    <td>Continue (both the fight and Osaekomi). Useful after accidentally stopping the time.</td>
+                    <td>C</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            To adapt the font size (for smaller/larger screens), simply zoom in or out (Firefox: Ctrl+MouseWheel). If you want to zoom the view-only page separately, reconfigure Firefox as follows:
+
+            <ul>
+                <li>Type "about:config" in your address bar and press enter.</li>
+                <li>If Firefox asks you, say you'll be careful.</li>
+                <li>Search the string "browser.zoom.siteSpecific". If it does not exist, create one, it's a boolean string.</li>
+                <li>Set it to false (Right click > "Toggle" or click on "Toggle").</li>
+            </ul>
+        </p>
+
+        <h2>About</h2>
+
+        <p>This software was created by Benjamin Bichsel from <a href="https://www.swiss-judo.ch/">Judo und Ju-Jitsu Club Frauenfeld</a>.</p>
+
+        <p>This is a free and open-source project licensed under the <a
+        href="https://www.gnu.org/licenses/agpl-3.0.en.html">GNU Affero General Public License</a>. As an open-source project, this software
+        is available for anyone to use, modify, and distribute in accordance
+        with the terms of the license (simplified summary <a
+        href="https://www.tldrlegal.com/license/gnu-affero-general-public-license-v3-agpl-3-0">here</a>).</p>
+
+        <p>This software was built using various resources,
+        including but not limited to:</p>
+        <ul class="list-group">
+          <li class="list-group-item">Icons from <a href="https://fontawesome.com/">FontAwesome</a></li>
+          <li class="list-group-item">Audio from <a href="https://freesound.org">Freesound</a> (Public Domain)</li>
+          <li class="list-group-item">Styles from <a href="https://getbootstrap.com/">Bootstrap</a></li>
+          <li class="list-group-item">Japanese flag from <a href="https://en.wikipedia.org/wiki/Flag_of_Japan#/media/File:Flag_of_Japan.svg">Wikipedia</a> (Public domain)</li>
+          <li class="list-group-item">Inspiration from <a
+          href="http://www.scorejudo.com">ScoreJudo</a> (but this webpage does
+          not share any code with ScoreJudo)</li>
+        </ul>
+      </div>
+
+    <!-- RESOURCES -->
+
+    <div id="audio">
+        <audio id="audio_bell" src="./audio/bell.mp3"></audio>
+        <audio id="audio_error" src="./audio/error.mp3"></audio>
+    </div>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/fontawesome.css" rel="stylesheet">
+    <link href="./css/solid.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
+
+    <script src="scripts/bootstrap.bundle.js"></script>
+    <script src="scripts/style.js"></script>
+    <script src="scripts/scoreboard.js"></script>
+</body>
+</html>
