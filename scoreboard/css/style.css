@@ -134,3 +134,10 @@ body {
 .hidden {
     display: none !important;
 }
+
+.colon { /* the colon ":" in minutes:seconds forms */
+    background-color: transparent;
+    color: white;
+    border-color: transparent;
+    font-weight: bold;
+}
