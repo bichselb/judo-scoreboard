@@ -171,52 +171,76 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <tr>
                                 <td class="text-center" style="width: 35%">
                                     <div class="optional">
+                                        <!-- Set fight time -->
                                         <div class="mb-2">
-                                            <a class="btn btn-success btn-lg" onclick="reset_all()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reset all (Enter)">
-                                                <i class="fa fa-rotate"></i>
-                                                <span id="reset_all_default_time">NaN</span>
-                                            </a>
-                                            <a class="btn btn-success btn-lg" onclick="golden_score_click()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reset for Golden Score">
-                                                <span>GS</span>
-                                                <span>0:00</span>
-                                            </a>
-                                        </div>
-
-                                        <div class="d-flex justify-content-center mb-2">
-                                            <div class="input-group" style="width:23em;">
-                                                <input id="central_minutes_input" type="number" min="0" step="1" value="5" class="form-control" placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Minutes">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">:</span>
-                                                </div>
-                                                <input id="central_seconds_input" type="number" min="0" step="1" value="0" class="form-control" placeholder="Seconds" aria-label="Seconds" aria-describedby="Seconds" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seconds">
-                                                <div class="input-group-append">
-                                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                        <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i id="central_reset_toggle_image" class="fa fa-fw fa-rotate"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" onclick="central_reset_toggle('reset')">
-                                                                <i class="fa fa-fw fa-rotate"></i>
-                                                                Set default central clock time & Reset
-                                                            </a></li>
-                                                            <li><a class="dropdown-item" onclick="central_reset_toggle('time')">
-                                                                <i class="fa fa-fw fa-stopwatch"></i>
-                                                                Only set central clock time
-                                                            </a></li>
-                                                            <li><a class="dropdown-item" onclick="central_reset_toggle('GS')">
-                                                                <i class="fa fa-fw">GS</i>
-                                                                Reset for Golden Score
-                                                            </a></li>
-                                                        </ul>
-                                                        <label class="btn btn-success" onclick="set_central_clock()">Set central clock</label>
+                                            <div class="d-flex justify-content-center mb-2">
+                                                <div class="input-group" style="width:23em;">
+                                                    <input id="total_fight_time_reset_minutes" type="number" min="0" step="1" value="5" class="form-control"
+                                                        placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" data-bs-title="Minutes" oninput="total_fight_time_reset_change()">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">:</span>
                                                     </div>
+                                                    <input id="total_fight_time_reset_seconds" type="number" min="0" step="1" value="0" class="form-control"
+                                                        placeholder="Seconds" aria-label="Seconds" aria-describedby="Seconds" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" data-bs-title="Seconds" oninput="total_fight_time_reset_change()">
+                                                    <a class="btn btn-success" onclick="reset_all()" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        data-bs-title="Reset all (Enter)">
+                                                        <i class="fa fa-fw fa-rotate" style="width: 2em;"></i>
+                                                        <span id="total_fight_time_reset_time">NaN</span>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center mb-2">
-                                            <div class="input-group" style="width:17em">
-                                                <input id="osaekomi_seconds_input" type="number" min="0" step="1" value="10" class="form-control" placeholder="Osaekomi seconds" aria-label="Osaekomi seconds" aria-describedby="Osaekomi seconds">
-                                                <button class="btn btn-success" type="button" onclick="apply_osaekomi_seconds()">Set osaekomi clock</button>
+                                        <!-- Reset for golden score -->
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-center mb-2">
+                                                <div class="input-group" style="width:23em;">
+                                                    <input id="golden_score_time_set_minutes" type="number" min="0" step="1" value="0" class="form-control"
+                                                        placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" data-bs-title="Minutes" oninput="golden_score_time_set_change()">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">:</span>
+                                                    </div>
+                                                    <input id="golden_score_time_set_seconds" type="number" min="0" step="1" value="0" class="form-control"
+                                                        placeholder="Seconds" aria-label="Seconds" aria-describedby="Seconds" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" data-bs-title="Seconds" oninput="total_fight_time_reset_change()">
+                                                    <a class="btn btn-success" onclick="reset_for_golden_score()" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        data-bs-title="Reset for Golden Score">
+                                                        <i class="fa fa-fw" style="width: 2em;">GS</i>
+                                                        <span id="golden_score_time_reset_time">NaN</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Set clock -->
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-center mb-2">
+                                                <div class="input-group" style="width:23em;">
+                                                    <input id="central_clock_set_minutes" type="number" min="0" step="1" value="5" class="form-control"
+                                                        placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" data-bs-title="Minutes" oninput="central_clock_set_change()">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">:</span>
+                                                    </div>
+                                                    <input id="central_clock_set_seconds" type="number" min="0" step="1" value="0" class="form-control"
+                                                        placeholder="Seconds" aria-label="Seconds" aria-describedby="Seconds" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" data-bs-title="Seconds" oninput="central_clock_set_change()">
+                                                    <a class="btn btn-success" onclick="central_clock_set()" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        data-bs-title="Set central clock (no reset)">
+                                                        <i class="fa fa-fw fa-stopwatch" style="width: 2em;"></i>
+                                                        <span id="central_clock_set_time">NaN</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Set osaekomi clock  -->
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="input-group" style="width:17em">
+                                                    <input id="osaekomi_seconds_input" type="number" min="0" step="1" value="10" class="form-control" placeholder="Osaekomi seconds" aria-label="Osaekomi seconds" aria-describedby="Osaekomi seconds">
+                                                    <button class="btn btn-success" type="button" onclick="apply_osaekomi_seconds()">Set osaekomi clock</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

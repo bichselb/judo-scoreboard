@@ -2,9 +2,15 @@
 
 Judo Scoreboard for use at judo tournaments.
 
-## Example screenshot
+## Example screenshots
 
-![Screenshot](./Screenshot.png)
+Control panel:
+
+![Screenshot](Screenshot-edit.png)
+
+View only:
+
+![Screenshot](Screenshot-view.png)
 
 ## See it in action
 

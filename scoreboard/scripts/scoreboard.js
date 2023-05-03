@@ -274,8 +274,8 @@ function update_tooltip(element, text) {
  * Update all aspects of the fight based on fight_state
  */
 function update_display(){
-    // default reset button
-    var reset = document.getElementById("reset_all_default_time");
+    // total fight time reset button
+    var reset = document.getElementById("total_fight_time_reset_time");
     reset.innerHTML = format_time_minutes(fight_rules.total_fight_time);
 
     // golden score
@@ -476,50 +476,65 @@ function osaekomi_pause_continue() {
     }
 }
 
-function golden_score_click() {
+function total_fight_time_reset_change() {
+    const minutes_input = document.getElementById("total_fight_time_reset_minutes");
+    const minutes = get_number_from_input(minutes_input);
+
+    const seconds_input = document.getElementById("total_fight_time_reset_seconds");
+    const seconds = get_number_from_input(seconds_input);
+
+    fight_rules.total_fight_time = minutes * 60 * 1000 + seconds * 1000;
+    // button is automatically updated in function update_display
+}
+total_fight_time_reset_change();
+
+function golden_score_time_set_change() {
+    const minutes_input = document.getElementById("golden_score_time_set_minutes");
+    const minutes = get_number_from_input(minutes_input);
+
+    const seconds_input = document.getElementById("golden_score_time_set_seconds");
+    const seconds = get_number_from_input(seconds_input);
+
+    const ms = minutes * 60 * 1000 + seconds * 1000;
+
+    var element = document.getElementById("golden_score_time_reset_time");
+    element.innerHTML = format_time_minutes(ms);
+
+    return ms;
+}
+golden_score_time_set_change(); // update the display once
+
+function reset_for_golden_score() {
+    const minutes_input = document.getElementById("golden_score_time_set_minutes");
+    minutes_input.value = 0;
+    const seconds_input = document.getElementById("golden_score_time_set_seconds");
+    seconds_input.value = 0;
+
     matte();
-    fight_state.central_clock_ms = 0;
+    const ms = golden_score_time_set_change()
+    fight_state.central_clock_ms = ms;
     fight_state.is_golden_score = true;
 }
 
-/**
- * Configure the default number of minutes to fight
- */
-function apply_minutes() {
-    const minutes_input = document.getElementById("minutes_input");
-    const minutes = parseInt(minutes_input.value);
+function central_clock_set_change() {
+    const minutes_input = document.getElementById("central_clock_set_minutes");
+    const minutes = get_number_from_input(minutes_input);
 
-    var should_reset_checkbox = document.getElementById("minutes_input_reset");
-    
-    if (should_reset_checkbox.checked) {
-        fight_rules.total_fight_time = minutes * 60 * 1000;
-        fight_state = get_initial_fight_state();
-    } else {
-        fight_state.central_clock_ms = minutes * 60 * 1000;
-    }
+    const seconds_input = document.getElementById("central_clock_set_seconds");
+    const seconds = get_number_from_input(seconds_input);
+
+    const ms = minutes * 60 * 1000 + seconds * 1000;
+
+    var element = document.getElementById("central_clock_set_time");
+    element.innerHTML = format_time_minutes(ms);
+
+    return ms;
 }
+central_clock_set_change(); // update the display once
 
-var central_reset_mode = 'reset';
-
-function central_reset_toggle(mode) {
-    central_reset_mode = mode;
-
-    const img = document.getElementById("central_reset_toggle_image");
-    img.classList.remove("fa-rotate");
-    img.classList.remove("fa-stopwatch");
-    img.innerHTML = '';
-
-    if (mode == 'reset') {
-        img.classList.add("fa-rotate");
-    } else if (mode == 'time') {
-        img.classList.add("fa-stopwatch");
-    } else {
-        console.assert(mode == 'GS', 'Unknown mode');
-        img.innerHTML = 'GS';
-
-        document.getElementById("central_minutes_input").value = 0;
-        document.getElementById("central_seconds_input").value = 0;
-    }
+function central_clock_set() {
+    fight_state.is_golden_score = false;
+    fight_state.central_clock_ms = central_clock_set_change();
 }
 
 function get_number_from_input(input) {
@@ -527,27 +542,6 @@ function get_number_from_input(input) {
         return 0;
     } else {
         return parseInt(input.value);
-    }
-}
-
-function set_central_clock() {
-    const minutes_input = document.getElementById("central_minutes_input");
-    const minutes = get_number_from_input(minutes_input);
-
-    const seconds_input = document.getElementById("central_seconds_input");
-    const seconds = get_number_from_input(seconds_input);
-
-    const ms = minutes * 60 * 1000 + seconds * 1000;
-    
-    if (central_reset_mode == 'reset') {
-        fight_rules.total_fight_time = ms;
-        fight_state = get_initial_fight_state();
-    } else if (central_reset_mode == 'time') {
-        fight_state.central_clock_ms = ms;
-    } else {
-        console.assert(central_reset_mode == 'GS', 'Unknown mode');
-        golden_score_click();
-        fight_state.central_clock_ms = -ms;
     }
 }
 
