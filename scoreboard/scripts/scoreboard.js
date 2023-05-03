@@ -33,6 +33,13 @@ var fight_rules = {
     osaekomi_wazari_time: 10 * 1000,
     osaekomi_ippon_time: 20 * 1000,
     osaekomi_max_time: 20 * 1000,
+    // stopping clock
+    stop_clock_on_ippon: 1,
+    stop_clock_on_wazari: 2,
+    stop_clock_on_shido: 3,
+    stop_osaekomi_on_ippon: 1,
+    stop_osaekomi_on_wazari: 2,
+    count_wazaris_towards_ippon: 2,
     // sound
     osaekomi_error_sound_frequency_ms: 1000,
     error_sound_volume: 1,
@@ -153,22 +160,64 @@ function master_timer_tick() {
  * Adds point and stops if winner
  */
 function add_point(fighter, point_name) {
-    var current = fight_state.points[fighter][point_name];
-    current += 1;
-    fight_state.points[fighter][point_name] = current;
+    const n_ippons_before = get_n_ippons(fighter);
+    const n_wazaris_before = fight_state.points[fighter]['wazari'];
+    const n_shidos_before = fight_state.points[fighter]['shido'];
 
-    var has_winner = 
-        point_name == 'ippon' ||
-        (point_name == 'wazari' && current % 2 == 0) ||
-        (point_name == 'shido' && current % 3 == 0);
+    fight_state.points[fighter][point_name] += 1;
 
+    // ippon stop?
+    const n_ippons = get_n_ippons(fighter);
+    const ippon_stop = 
+        n_ippons_before != n_ippons &&
+        fight_rules.stop_clock_on_ippon != null &&
+        n_ippons % fight_rules.stop_clock_on_ippon == 0;
 
-    if (has_winner) {
+    // wazari stop?
+    const n_wazaris = fight_state.points[fighter]['wazari'];
+    const wazari_stop =
+        n_wazaris_before != n_wazaris &&
+        fight_rules.stop_clock_on_wazari != null &&
+        n_wazaris % fight_rules.stop_clock_on_wazari == 0;
+    
+    // shido stop?
+    const n_shidos = fight_state.points[fighter]['shido'];
+    const shido_stop =
+        n_shidos_before != n_shidos &&
+        fight_rules.stop_clock_on_shido != null &&
+        n_shidos % fight_rules.stop_clock_on_shido == 0;
+
+    if (ippon_stop || wazari_stop || shido_stop) {
         ring_bell();
         matte();
     }
 
+    // ippon osaekomi stop?
+    const ippon_osaekomi_stop = 
+        n_ippons_before != n_ippons &&
+        fight_rules.stop_osaekomi_on_ippon != null &&
+        n_ippons % fight_rules.stop_osaekomi_on_ippon == 0;
+    
+    // wazari osaekomi stop?
+    const wazari_osaekomi_stop =
+        n_wazaris_before != n_wazaris &&
+        fight_rules.stop_osaekomi_on_wazari != null &&
+        n_wazaris % fight_rules.stop_osaekomi_on_wazari == 0;
+    
+    if (ippon_osaekomi_stop || wazari_osaekomi_stop) {
+        ring_bell();
+        fight_state.osaekomi_running = false;
+    }
+
 }
+function get_n_ippons(fighter) {
+    var n_ippons = fight_state.points[fighter]['ippon'];
+    if (fight_rules.count_wazaris_towards_ippon != null) {
+        n_ippons += Math.floor(fight_state.points[fighter]['wazari'] / fight_rules.count_wazaris_towards_ippon);
+    }
+    return n_ippons;
+}
+
 function remove_point(fighter, point_name) {
     var current = fight_state.points[fighter][point_name];
     current = Math.max(current - 1, 0);
