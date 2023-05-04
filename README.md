@@ -1,6 +1,6 @@
 # Judo Scoreboard
 
-Judo Scoreboard for use at judo tournaments.
+Judo Scoreboard to track fights at judo tournaments.
 
 ## Example screenshots
 

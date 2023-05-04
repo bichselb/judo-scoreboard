@@ -27,7 +27,7 @@ var master_timer_ms = 10;
 
 var fight_rules = {
     // fight time
-    total_fight_time: 5 * 60 * 1000,
+    total_fight_time_ms: 5 * 60 * 1000,
     // osaekomi times
     osaekomi_warn_unassigned: 2 * 1000,
     osaekomi_wazari_time: 10 * 1000,
@@ -53,7 +53,8 @@ var fight_rules = {
 /////////////////
 
 function get_initial_fight_state() {
-    console.assert(fight_rules.total_fight_time % master_timer_ms == 0, "Total fight time invalid");
+    /* check that master_timer_ms is compatible with all other time information */
+    console.assert(fight_rules.total_fight_time_ms % master_timer_ms == 0, "Total fight time invalid");
     if (fight_rules.osaekomi_warn_unassigned != null) {
         console.assert(fight_rules.osaekomi_warn_unassigned % master_timer_ms == 0, "Osaekomi warn time invalid");
     }
@@ -67,8 +68,7 @@ function get_initial_fight_state() {
         console.assert(fight_rules.osaekomi_max_time % master_timer_ms == 0, "Osaekomi max time invalid");
     }
 
-
-    points = {
+    const points = {
             0: {
                 'ippon': 0,
                 'wazari': 0,
@@ -80,12 +80,12 @@ function get_initial_fight_state() {
                 'shido': 0
             }
     };
-    state = {
+    var state = {
         // clock
         central_clock_running: false,
-        central_clock_ms: fight_rules.total_fight_time,
+        central_clock_ms: fight_rules.total_fight_time_ms,
         // points
-        points: JSON.parse(JSON.stringify(points)),
+        points: JSON.parse(JSON.stringify(points)), // deep copy
         // osaekomi
         osaekomi_ms: 0,
         osaekomi_running: false,
@@ -108,8 +108,9 @@ function master_timer_tick() {
     if (fight_state.central_clock_running) {
         fight_state.central_clock_ms -= master_timer_ms;
     
+        // stop clock at end
         if (fight_state.is_golden_score) {
-
+            // golden score clock never ends on its own
         } else {
             if (fight_state.central_clock_ms <= 0 && !fight_state.osaekomi_running) {
                 fight_state.central_clock_running = false;
@@ -124,6 +125,7 @@ function master_timer_tick() {
         fight_state.osaekomi_ms += master_timer_ms;
 
         if (fight_state.osaekomi_holder != -1) {
+            // award osaekomi points
             if (
                 fight_rules.osaekomi_wazari_time != null &&
                 fight_state.osaekomi_ms == fight_rules.osaekomi_wazari_time
@@ -144,13 +146,15 @@ function master_timer_tick() {
             fight_rules.osaekomi_max_time != null &&
             fight_state.osaekomi_ms == fight_rules.osaekomi_max_time
         ) {
-            fight_state.osaekomi_running = false
+            // stop osaekomi at end
+            fight_state.osaekomi_running = false;
         }
 
         if (
             fight_rules.osaekomi_max_time != null &&
             fight_state.osaekomi_ms > fight_rules.osaekomi_max_time
         ) {
+            // cap osaekomi time
             fight_state.osaekomi_ms = fight_rules.osaekomi_max_time;
         }
     }
@@ -208,8 +212,12 @@ function add_point(fighter, point_name) {
         ring_bell();
         fight_state.osaekomi_running = false;
     }
-
 }
+/**
+ * 
+ * @param {*} fighter 
+ * @returns the number of ippons (taking into account wazaris) for fighter
+ */
 function get_n_ippons(fighter) {
     var n_ippons = fight_state.points[fighter]['ippon'];
     if (fight_rules.count_wazaris_towards_ippon != null) {
@@ -299,18 +307,18 @@ function osaekomi_reset() {
 // DISPLAY //
 /////////////
 
-var div_point_ids_warned_about = new Set();
-var osaekomi_assign_original_width = document.getElementById('osaekomi_assign_0').style.width;
-var osaekomi_assign_text_original_width = document.getElementById('osaekomi_assign_text').style.width;
+const el_point_ids_warned_about = new Set();
+const osaekomi_assign_original_width = document.getElementById('osaekomi_assign_0').style.width;
+const osaekomi_assign_text_original_width = document.getElementById('osaekomi_assign_text').style.width;
 
 
 /**
  * 
  * @param {*} element The element with the tooltip
- * @param {*} text the new text to put
+ * @param {*} text the new text to put in the tooltip
  */
 function update_tooltip(element, text) {
-    var tooltip = bootstrap.Tooltip.getInstance(element);
+    const tooltip = bootstrap.Tooltip.getInstance(element);
     if (tooltip._config.title != text) {
         tooltip._config.title = text;
         if (tooltip.tip) {
@@ -323,142 +331,146 @@ function update_tooltip(element, text) {
  * Update all aspects of the fight based on fight_state
  */
 function update_display(){
-    // total fight time reset button
-    var reset = document.getElementById("total_fight_time_reset_time");
-    reset.innerHTML = format_time_minutes(fight_rules.total_fight_time);
+    // total fight time reset button: update time
+    const total_fight_time_reset_el = document.getElementById("total_fight_time_reset_time");
+    total_fight_time_reset_el.innerHTML = format_time_minutes(fight_rules.total_fight_time_ms);
 
-    // golden score
-    div = document.getElementById('overtime');
+    // golden score: hide or show
+    const golden_score_el = document.getElementById('golden_score');
     if (fight_state.is_golden_score) {
-        div.style.display = null;
+        golden_score_el.style.display = null;
     } else {
-        div.style.display = 'none';
+        golden_score_el.style.display = 'none';
     }
 
-    // central clock
-    div = document.getElementById('central_clock_time');
-    div.innerHTML = format_time_minutes(fight_state.central_clock_ms);
-    div = document.getElementById('central_clock_time_tenths');
-    div.innerHTML = format_time_tenths(fight_state.central_clock_ms);
+    // central clock: update time
+    const central_clock_el = document.getElementById('central_clock_time');
+    central_clock_el.innerHTML = format_time_minutes(fight_state.central_clock_ms);
+    const central_clock_tenths_el = document.getElementById('central_clock_time_tenths');
+    central_clock_tenths_el.innerHTML = format_time_tenths(fight_state.central_clock_ms);
 
-    // central clock buttons
-    var pause_continue = document.getElementById('central_clock_pause_continue');
-    var pause_continue_img = document.getElementById('central_clock_pause_continue_img');
-    pause_continue_img.classList.remove('fa-play');
-    pause_continue_img.classList.remove('fa-pause');
+    // central clock buttons: update based on state
+    const pause_continue_central = document.getElementById('central_clock_pause_continue');
+    const pause_continue_central_img = document.getElementById('central_clock_pause_continue_img');
+    pause_continue_central_img.classList.remove('fa-play');
+    pause_continue_central_img.classList.remove('fa-pause');
     if (fight_state.central_clock_running) {
-        update_tooltip(pause_continue, 'Matte (Space)');
-        pause_continue_img.classList.add('fa-pause');
+        update_tooltip(pause_continue_central, 'Matte (Space)');
+        pause_continue_central_img.classList.add('fa-pause');
     } else {
-        update_tooltip(pause_continue, 'Hajime (Space)');
-        pause_continue_img.classList.add('fa-play');
+        update_tooltip(pause_continue_central, 'Hajime (Space)');
+        pause_continue_central_img.classList.add('fa-play');
     }
 
-    // osaekomi time
-    div = document.getElementById('osaekomi_time');
-    div.innerHTML = format_time_seconds(fight_state.osaekomi_ms);
-    div = document.getElementById('osaekomi_time_tenths');
-    div.innerHTML = format_time_tenths(fight_state.osaekomi_ms);
+    // osaekomi time: update time
+    const osaekomi_time_el = document.getElementById('osaekomi_time');
+    osaekomi_time_el.innerHTML = format_time_seconds(fight_state.osaekomi_ms);
+    osaekomi_tenths_el = document.getElementById('osaekomi_time_tenths');
+    osaekomi_tenths_el.innerHTML = format_time_tenths(fight_state.osaekomi_ms);
 
     // reset osaekomi assign
-    div_0 = document.getElementById('osaekomi_assign_0');
-    div_1 = document.getElementById('osaekomi_assign_1');
-    div_text = document.getElementById('osaekomi_assign_text');
+    const assign_0 = document.getElementById('osaekomi_assign_0');
+    const assign_1 = document.getElementById('osaekomi_assign_1');
+    const assign_text = document.getElementById('osaekomi_assign_text');
     
     // set osaekomi assign correctly
-    div_0.style.width = osaekomi_assign_original_width;
-    div_1.style.width = osaekomi_assign_original_width;
-    div_text.style.display = null;
+    assign_0.style.width = osaekomi_assign_original_width;
+    assign_1.style.width = osaekomi_assign_original_width;
+    assign_text.style.display = null;
     if (fight_state.osaekomi_holder == 0) {
-        div_0.style.width = '45%';
-        div_1.style.width = '15%';
-        div_text.style.display = 'none';
+        assign_0.style.width = '45%';
+        assign_1.style.width = '15%';
+        assign_text.style.display = 'none';
     } else if (fight_state.osaekomi_holder == 1) {
-        div_0.style.width = '15%';
-        div_1.style.width = '45%';
-        div_text.style.display = 'none';
+        assign_0.style.width = '15%';
+        assign_1.style.width = '45%';
+        assign_text.style.display = 'none';
     }
 
-    // highlight if forgotten
-    div = document.getElementById('osaekomi_assign_text');
-    div.classList.remove('osaekomi_assign_stress');
+    // highlight if forgotten to assign
+    assign_text.classList.remove('osaekomi_assign_stress');
     if (
         fight_rules.osaekomi_warn_unassigned != null &&
         fight_state.osaekomi_holder == -1 &&
         fight_state.osaekomi_ms > fight_rules.osaekomi_warn_unassigned
     ) {
-        div.classList.add('osaekomi_assign_stress');
+        assign_text.classList.add('osaekomi_assign_stress');
         if (fight_state.osaekomi_running && fight_state.osaekomi_ms % fight_rules.osaekomi_error_sound_frequency_ms == 0) {
             if (!is_view) {
-                var audio = document.getElementById("audio_error");
+                const audio = document.getElementById("audio_error");
                 audio.volume = fight_rules.error_sound_volume;
                 audio.play();
             }
         }
     }
 
-    // osaekomi buttons
-    start_stop = document.getElementById('osaekomi_start_stop');
-    start_stop_img = document.getElementById('osaekomi_start_stop_img');
-    start_stop_img.classList.remove('fa-play');
-    start_stop_img.classList.remove('fa-stop');
-    start_stop_img.classList.remove('fa-repeat');
+    // osaekomi buttons: update based on state
+    const start_stop_osae = document.getElementById('osaekomi_start_stop');
+    const start_stop_osae_img = document.getElementById('osaekomi_start_stop_img');
+    start_stop_osae_img.classList.remove('fa-play');
+    start_stop_osae_img.classList.remove('fa-stop');
+    start_stop_osae_img.classList.remove('fa-repeat');
     if (fight_state.osaekomi_running) {
-        update_tooltip(start_stop, 'Toketa (W)');
-        start_stop_img.classList.add('fa-stop');
+        update_tooltip(start_stop_osae, 'Toketa (W)');
+        start_stop_osae_img.classList.add('fa-stop');
     } else if (fight_state.osaekomi_ms == 0) {
-        update_tooltip(start_stop, 'Osaekomi (W)');
-        start_stop_img.classList.add('fa-play');
+        update_tooltip(start_stop_osae, 'Osaekomi (W)');
+        start_stop_osae_img.classList.add('fa-play');
     } else {
-        update_tooltip(start_stop, 'Reset & Osaekomi (W)');
-        start_stop_img.classList.add('fa-repeat');
+        update_tooltip(start_stop_osae, 'Reset & Osaekomi (W)');
+        start_stop_osae_img.classList.add('fa-repeat');
     }
 
-    pause_continue = document.getElementById('osaekomi_pause_continue');
-    pause_continue_img = document.getElementById('osaekomi_pause_continue_img');
-    pause_continue_img.classList.remove('fa-pause');
-    pause_continue_img.classList.remove('fa-play');
+    const pause_continue_osae = document.getElementById('osaekomi_pause_continue');
+    const pause_continue_osae_img = document.getElementById('osaekomi_pause_continue_img');
+    pause_continue_osae_img.classList.remove('fa-pause');
+    pause_continue_osae_img.classList.remove('fa-play');
     if (fight_state.osaekomi_running) {
-        update_tooltip(pause_continue, 'Pause');
-        pause_continue_img.classList.add('fa-pause');
+        update_tooltip(pause_continue_osae, 'Pause');
+        pause_continue_osae_img.classList.add('fa-pause');
     } else if (fight_state.osaekomi_ms == 0) {
-        update_tooltip(pause_continue, 'Continue (C)');
-        pause_continue_img.classList.add('fa-play');
+        update_tooltip(pause_continue_osae, 'Continue (C)');
+        pause_continue_osae_img.classList.add('fa-play');
     } else {
-        update_tooltip(pause_continue, 'Continue (C)');
-        pause_continue_img.classList.add('fa-play');
+        update_tooltip(pause_continue_osae, 'Continue (C)');
+        pause_continue_osae_img.classList.add('fa-play');
     }
 
-    reset = document.getElementById('osaekomi_reset');
-    reset.classList.remove('disabled');
+    const reset_osae = document.getElementById('osaekomi_reset');
+    reset_osae.classList.remove('disabled');
     if (fight_state.osaekomi_running) {
         // leave enabled
     } else if (fight_state.osaekomi_ms == 0) {
-        reset.classList.add('disabled');
+        reset_osae.classList.add('disabled');
     } else {
         // leave enabled
     }
 
-    // points
-    for (var i=0;i<2;i++) {
-        points = fight_state.points[i];
-        for (const point in points){
-            div_point_id = 'point_' + i + '_' + point;
-            div_point = document.getElementById(div_point_id);
-            if (div_point == null) {
-                if (! div_point_ids_warned_about.has(div_point_id)) {
-                    div_point_ids_warned_about.add(div_point_id);
-                    console.warn("Point", point, "has no div tag under id", div_point_id);
+    // points: update
+    for (var i=0;i<2;i++) { // loop over both fighters
+        const points = fight_state.points[i];
+        for (const point in points){ // loop over all points
+            const el_point_id = 'point_' + i + '_' + point;
+            const el_point = document.getElementById(el_point_id);
+            if (el_point == null) {
+                // warn about points not present in the html
+                if (! el_point_ids_warned_about.has(el_point_id)) {
+                    el_point_ids_warned_about.add(el_point_id);
+                    console.warn("Point", point, "has no tag under id", el_point_id);
                 }
             } else {
-                div_point.innerHTML = points[point];
+                el_point.innerHTML = points[point];
             }
         }
     }
 }
 
+/////////////////
+// FORMAT TIME //
+/////////////////
+
 function format_time_seconds(milliseconds) {
-    var total_seconds = Math.floor(milliseconds / 1000);
+    const total_seconds = Math.floor(milliseconds / 1000);
     return total_seconds.toString();
 }
 
@@ -486,13 +498,17 @@ function format_time_minutes(milliseconds) {
  * - On negative inputs, remove the sign from the output
  */
 function format_time_tenths(milliseconds) {
-    tenths = Math.floor((milliseconds % 1000) / 100);
+    var tenths = Math.floor((milliseconds % 1000) / 100);
     if (tenths < 0) {
         tenths = -tenths;
         tenths %= 10;
     }
     return tenths.toString();
 }
+
+/////////////////////
+// DISPLAY ACTIONS //
+/////////////////////
 
 function central_clock_time_click() {
     central_clock_pause_continue();
@@ -532,7 +548,7 @@ function total_fight_time_reset_change() {
     const seconds_input = document.getElementById("total_fight_time_reset_seconds");
     const seconds = get_number_from_input(seconds_input);
 
-    fight_rules.total_fight_time = minutes * 60 * 1000 + seconds * 1000;
+    fight_rules.total_fight_time_ms = minutes * 60 * 1000 + seconds * 1000;
     // button is automatically updated in function update_display
 }
 total_fight_time_reset_change();
@@ -546,7 +562,7 @@ function golden_score_time_set_change() {
 
     const ms = minutes * 60 * 1000 + seconds * 1000;
 
-    var element = document.getElementById("golden_score_time_reset_time");
+    const element = document.getElementById("golden_score_time_reset_time");
     element.innerHTML = format_time_minutes(ms);
 
     return ms;
@@ -574,7 +590,7 @@ function central_clock_set_change() {
 
     const ms = minutes * 60 * 1000 + seconds * 1000;
 
-    var element = document.getElementById("central_clock_set_time");
+    const element = document.getElementById("central_clock_set_time");
     element.innerHTML = format_time_minutes(ms);
 
     return ms;
@@ -599,7 +615,7 @@ function get_number_from_input(input) {
  */
 function apply_osaekomi_seconds() {
     // record and remove osaekomi holder
-    var osaekomi_holder = fight_state.osaekomi_holder;
+    const osaekomi_holder = fight_state.osaekomi_holder;
     osaekomi_assign(-1, false);
 
     const seconds_input = document.getElementById("osaekomi_seconds_input");
@@ -621,6 +637,48 @@ function set_fight_rules() {
     fight_rules = JSON.parse(fight_rules_string);
 }
 
+
+//////////
+// VIEW //
+//////////
+
+const broadcast = new BroadcastChannel("fight_state");
+
+function broadcast_fight_state() {
+    broadcast.postMessage(fight_state);
+    // var fight_state_string = JSON.stringify(fight_state);
+    // localStorage.setItem('fight_state', fight_state_string);
+}
+
+/**
+ * Logic to enable the view-only window
+ */
+function display_view_only() {
+    const div_body = document.querySelector('body');
+    div_body.style.overflow = 'hidden';
+
+    const optionals = document.getElementsByClassName('optional');
+
+    for(i = 0; i < optionals.length; i++) {
+        optionals[i].classList.add('hidden');
+    }
+
+    window.scrollTo(0,0);
+}
+
+
+function scroll_down() {
+    const element = document.getElementById("usage");
+    element.scrollIntoView({ behavior: "smooth" });
+}
+
+// hide button once we are scrolling
+const scroll_down_button = document.getElementById('scroll_down');
+window.addEventListener('scroll', () => {
+    scroll_down_button.style.display = 'none';
+});
+
+
 //////////
 // KEYS //
 //////////
@@ -630,9 +688,9 @@ function register_keys() {
         var ignore = false;
 
         // element on which the event was originally fired
-        source = event.target,
+        const source = event.target;
         // exclude these elements
-        exclude = ['input', 'textarea'];
+        const exclude = ['input', 'textarea'];
         if (exclude.indexOf(source.tagName.toLowerCase()) !== -1) {
             // process the keypress normally
             return;
@@ -715,8 +773,8 @@ function register_keys() {
 //////////
 
 function ring_bell() {
-    if (! is_view) {
-        var audio = document.getElementById('audio_bell');
+    if (!is_view) {
+        const audio = document.getElementById('audio_bell');
         audio.volume = fight_rules.win_sound_volume;
         audio.play();
     }
@@ -741,16 +799,16 @@ function master_timer_handler() {
         master_timer_next_tick_ms = window.performance.now();
         master_timer_first_tick_ms = master_timer_next_tick_ms;
     }
-    var now = window.performance.now();
+    const now = window.performance.now();
 
     // check performance
     master_timer_n_calls += 1;
-    var average_call_frequency = (now - master_timer_first_tick_ms) / master_timer_n_calls;
+    const average_call_frequency = (now - master_timer_first_tick_ms) / master_timer_n_calls;
     if (master_timer_n_calls % 1000 == 0) {
         console.log(`Average call frequency: ${average_call_frequency}ms`);
     }
 
-    var delta = now-master_timer_next_tick_ms;
+    const delta = now-master_timer_next_tick_ms;
     if (delta >= master_timer_ms * 1.1 && delta > master_timer_delta_max_reported && master_timer_n_calls >= 1000) {
         master_timer_delta_max_reported = delta;
         console.warn(`Master timer is behind. We would like to run it every ${master_timer_ms}ms, now is ${now}ms and the next tick is only at ${master_timer_next_tick_ms}ms (Delta: ${delta}ms)`);
@@ -763,53 +821,12 @@ function master_timer_handler() {
     }
 
     // set timer for next call
-    delay_until_next = Math.max(0, master_timer_next_tick_ms - now);
+    const delay_until_next = Math.max(0, master_timer_next_tick_ms - now);
     setTimeout(master_timer_handler, delay_until_next);
 
     // wrap up
     master_timer_final();
 }
-
-
-//////////
-// VIEW //
-//////////
-
-const broadcast = new BroadcastChannel("fight_state");
-
-function broadcast_fight_state() {
-    broadcast.postMessage(fight_state);
-    // var fight_state_string = JSON.stringify(fight_state);
-    // localStorage.setItem('fight_state', fight_state_string);
-}
-
-/**
- * Logic to enable the view-only window
- */
-function display_view_only() {
-    var div_body = document.querySelector('body');
-    div_body.style.overflow = 'hidden';
-
-    var optionals = document.getElementsByClassName('optional');
-
-    for(i = 0; i < optionals.length; i++) {
-        optionals[i].classList.add('hidden');
-    }
-
-    window.scrollTo(0,0);
-}
-
-
-function scroll_down() {
-    const element = document.getElementById("usage");
-    element.scrollIntoView({ behavior: "smooth" });
-}
-
-// hide button once we are scrolling
-const scroll_down_button = document.getElementById('scroll_down');
-window.addEventListener('scroll', () => {
-    scroll_down_button.style.display = 'none';
-});
 
 ///////////
 // START //

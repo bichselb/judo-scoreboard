@@ -19,11 +19,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <html lang="en">
 <head>
     <title>Judo Scoreboard</title>
+    <meta name="description" content="Judo Scoreboard to track fights at judo tournaments">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
 </head>
 <body>
     <table class="scoreboard_full">
         <tbody>
+            <!-- fighter 0 (white) row -->
             <tr class="scoreboard_fighter_row">
                 <td>
                     <table style="background-color: #eeeeee">
@@ -94,6 +98,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </table>
                 </td>
             </tr>
+            <!-- fighter 1 (blue) row -->
             <tr class="scoreboard_fighter_row">
                 <td>
                     <table style="background-color: #64a7ff">
@@ -164,6 +169,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </table>
                 </td>
             </tr>
+            <!-- timer row -->
             <tr class="scoreboard_time_row">
                 <td>
                     <table>
@@ -174,7 +180,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         <!-- Set fight time -->
                                         <div class="mb-2">
                                             <div class="d-flex justify-content-center mb-2">
-                                                <div class="input-group" style="width:23em;">
+                                                <div class="input-group time_input_group">
                                                     <input id="total_fight_time_reset_minutes" type="number" min="0" step="1" value="5" class="form-control"
                                                         placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" data-bs-title="Minutes" oninput="total_fight_time_reset_change()">
@@ -195,7 +201,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         <!-- Reset for golden score -->
                                         <div class="mb-2">
                                             <div class="d-flex justify-content-center mb-2">
-                                                <div class="input-group" style="width:23em;">
+                                                <div class="input-group time_input_group">
                                                     <input id="golden_score_time_set_minutes" type="number" min="0" step="1" value="0" class="form-control"
                                                         placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" data-bs-title="Minutes" oninput="golden_score_time_set_change()">
@@ -216,7 +222,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         <!-- Set clock -->
                                         <div class="mb-2">
                                             <div class="d-flex justify-content-center mb-2">
-                                                <div class="input-group" style="width:23em;">
+                                                <div class="input-group time_input_group">
                                                     <input id="central_clock_set_minutes" type="number" min="0" step="1" value="5" class="form-control"
                                                         placeholder="Minutes" aria-label="Minutes" aria-describedby="Minutes" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" data-bs-title="Minutes" oninput="central_clock_set_change()">
@@ -247,7 +253,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 </td>
                                 <td style="width: 35%">
                                     <div class="timer">
-                                        <span id="overtime" style="display: none">
+                                        <span id="golden_score" style="display: none">
                                             GS
                                         </span>
                                         <span onclick="central_clock_time_click()" id="central_clock_time" class="timer_seconds lh-1">NaN</span>
@@ -333,7 +339,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
         <h2>Custom changes to rules</h2>
 
-        In the following, you can adapt the scoreboard logic directly by modifying the below JSON configuration. Times are in milliseconds. Osaekomi times ("osaekomi_wazari_time", "osaekomi_ippon_time", "osaekomi_warn_unassigned") can be set to "null" (without the quotation marks) to disable them.
+        In the following, you can adapt the scoreboard logic directly by
+        modifying the below JSON configuration. Times are in milliseconds. Many
+        settings (e.g., "osaekomi_wazari_time", "osaekomi_ippon_time",
+        "osaekomi_warn_unassigned", "count_wazaris_towards_ippon") can be set to
+        "null" (without the quotation marks) to disable them.
 
         Adapt the JSON and click "Update and Reset" to apply the changes.
 
@@ -348,9 +358,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
         <ul>
             <li>Prepare a laptop and connect it to a second monitor (or projector).</li>
-            <li>Download the webpage source scoreboard.zip from <a href="https://github.com/bichselb/judo-scoreboard/releases/latest">GitHub</a>.</li>
+            <li>Download the webpage source scoreboard.zip from <a
+            href="https://github.com/bichselb/judo-scoreboard/releases/latest">the
+            latest GitHub release</a>.</li>
             <li>Extract the zip to any directory.</li>
-            <li>Open file index.html.</li>
+            <li>Open the extracted file index.html.</li>
             <li>Open a new view-only tab by clicking the eye icon.</li>
             <li>Move the opened tab to the second monitor.</li>
             <li>Click into the moved tab and press F11 to make the page full
@@ -358,7 +370,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <li>Move the mouse back to the original tab and use the scoreboard
             from there. Most buttons can also be triggered by keyboard
             shortcuts, which are noted as hover information on the respective
-            buttons. We recommend labeling the keyboard using stickers, such as in <a href="./images/stickers.jpeg">this example</a>.</li>
+            buttons. We recommend labeling the keyboard using stickers, such as
+            in <a href="./images/stickers.jpeg">this example</a>.</li>
         </ul>
 
         Here is an overview over all keyboard shortcuts:
@@ -444,7 +457,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <ul class="list-group">
           <li class="list-group-item">Icons from <a href="https://fontawesome.com/">FontAwesome</a></li>
           <li class="list-group-item">Audio from <a href="https://freesound.org">Freesound</a> (Public Domain)</li>
-          <li class="list-group-item">Styles from <a href="https://getbootstrap.com/">Bootstrap</a></li>
+          <li class="list-group-item">Styles from <a href="https://getbootstrap.com/">Bootstrap</a> (MIT license)</li>
           <li class="list-group-item">Japanese flag from <a href="https://en.wikipedia.org/wiki/Flag_of_Japan#/media/File:Flag_of_Japan.svg">Wikipedia</a> (Public domain)</li>
           <li class="list-group-item">Inspiration from <a
           href="http://www.scorejudo.com">ScoreJudo</a> (but this webpage does

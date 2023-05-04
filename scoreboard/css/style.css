@@ -16,39 +16,32 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-body {
-    background-color: #ffffff;
-    /* remove whitespace around scoreboard */
-    padding: 0px;
-    margin: 0px;
-}
 .scoreboard_full { /* the full scoreboard including points and times */
-    /* remove whitespace around scoreboard */
-    border-collapse: collapse;
-    border: 0px;
-    /* use full width and height */
+    /* use full width and height of the window */
     width: 100%;
     height: 100vh;
 }
 .scoreboard_full > tbody > tr > td {
+    /* remove whitespace between rows*/
     padding: 0px;
+    /* align content of individual cells in the center */
     text-align: center;
 }
 
 .scoreboard_fighter_row > td > table { /* the row for a fighter (white/blue) */
-    /* use full width and height */
+    /* use full width and height of the row */
     width: 100%;
     height: 100%;
 }
 
 .scoreboard_time_row { /* the row containing timers (central/osaekomi) */
-    background-color: #124116;
+    background-color: #124116; /* dark green */
 }
 .scoreboard_time_row > * {
-    color: white;
+    color: white; /* default text: white (for contrast to background) */
 }
 .scoreboard_time_row > td > table {
-    /* use full width and height */
+    /* use full width and height of the row */
     width: 100%;
     height: 100%;
 }
@@ -57,31 +50,31 @@ body {
     font-size: 2em;
     font-weight: bold;
 }
-.point > span {
+.point > span { /* points like number of ippon */
     font-size: 13em;
     font-weight: bold;
-    cursor: pointer;
+    cursor: pointer; /* clickable */
     /* avoid changes to overall alignment on double-digits */
     width: 1.1em;
-    text-align: center;
-    /* display -/+ vertically aligned */
+    /* display -/+ buttons vertically aligned */
     vertical-align: middle;
     display: inline-block;
 }
-.penalty > span { /* custom format for penalties like shido */
+.penalty > span { /* custom format for penalties like number of shido */
     color: #B00020;
     font-size: 8em;
 }
 
 .timer { /* format for both timers */
-    /* center the timer */
-    display: flex;
+    /* center the timer horizontally */
     justify-content: center;
+    /* center the tenth digits vertically */
+    display: flex;
     align-items: center;
 }
 .timer_seconds {
     font-size: 8em;
-    cursor: pointer;
+    cursor: pointer; /* clickable */
 }
 .timer_tenths {
     /* ensure this block does not affect alignment */
@@ -89,15 +82,12 @@ body {
     /* prevent newlines */
     white-space: nowrap;
 }
-.timer_tenths > span {
-    vertical-align: middle;
-}
-#overtime { /* symbol for overtime */
+#golden_score { /* symbol for golden score */
     font-size: 3em;
     padding: 0.3em;
 }
 .osaekomi_assign_stress { /* visually highlight the need for assignment */
-    animation: pulse 0.7s ease-in-out infinite;
+    animation: pulse 0.7s ease-in-out infinite; /* pulse */
     color: #FFFF00;
     font-weight: bold;
 }
@@ -114,18 +104,19 @@ body {
 }
 
 #enable_view_only { /* switch from editable to view-only */
-    /* put on top right */
+    /* put in corner */
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 999; /*put element in front*/
+    z-index: 999; /* put element in front */
 }
 
 #scroll_down {
+    /* put in corner */
     position: fixed;
     left: 20px;
     bottom: 20px;
-    z-index: 999; /*put element in front*/
+    z-index: 999; /* put element in front */
 }
 
 .optional { /* elements to hide in view-only */
@@ -135,6 +126,9 @@ body {
     display: none !important;
 }
 
+.time_input_group {
+    width:23em;
+}
 .colon { /* the colon ":" in minutes:seconds forms */
     background-color: transparent;
     color: white;
