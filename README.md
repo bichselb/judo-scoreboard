@@ -35,6 +35,10 @@ Advantages of this scoreboard:
   - Configuring whether and when to auto-award Wazari or Ippon during Osaekomi
   - Configuring whether the clock should be stopped on certain events (e.g. upon
     Ippon or upon second Wazari through Osaekomi)
+- The [AGPL license](./LICENSE.md) ensures the software is free to use, modify,
+  and share. This means users can adapt it as needed and even offer paid
+  services like custom deployments and support, as long as any modifications
+  remain open-source.
 - The implementation is using standard technologies (HTML, Javascript, CSS
   including Bootstrap) and is therefore easy to adapt or extend. The key fight
   logic is in function `master_timer_tick` of
