@@ -29,7 +29,7 @@ Advantages of this scoreboard:
 - This scoreboard does not need to be installed, it is straight-forward to run
   via your browser.
 - This scoreboard supports a high degree of flexibility through [custom
-  configurations](https://bichselb.github.io/judo-scoreboard/scoreboard/#usage),
+  configurations](https://bichselb.github.io/judo-scoreboard/scoreboard/#custom),
   such as:
   - Awarding more than one Ippon
   - Configuring whether and when to auto-award Wazari or Ippon during Osaekomi
