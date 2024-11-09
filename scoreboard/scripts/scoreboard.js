@@ -45,7 +45,8 @@ var fight_rules = {
     error_sound_volume: 1,
     win_sound_volume: 1,
     // keys
-    enable_reset_by_enter: true
+    enable_reset_by_enter: true,
+    enable_golden_score_by_g: true,
 }
 
 /////////////////
@@ -684,6 +685,8 @@ window.addEventListener('scroll', () => {
 //////////
 
 function register_keys() {
+    // For an overview of keycodes, see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+
     document.body.addEventListener("keydown", (event) => {
         var ignore = false;
 
@@ -719,6 +722,11 @@ function register_keys() {
         }
         if (event.keyCode == 67) { // C
             osaekomi_continue();
+            ignore = true;
+        }
+
+        if (event.keyCode == 71 && fight_rules.enable_golden_score_by_g) { // G
+            reset_for_golden_score();
             ignore = true;
         }
 
