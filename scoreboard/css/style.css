@@ -104,7 +104,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 #enable_view_only { /* switch from editable to view-only */
-    /* put in corner */
+    /* put in top-left corner */
     position: fixed;
     top: 20px;
     left: 20px;
@@ -112,7 +112,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 #scroll_down {
-    /* put in corner */
+    /* put in bottom-left corner */
     position: fixed;
     left: 20px;
     bottom: 20px;
@@ -126,7 +126,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     display: none !important;
 }
 
-.time_input_group {
+.time_input_group { /* group to set times (e.g. central clock) */
     width:23em;
 }
 .colon { /* the colon ":" in minutes:seconds forms */
