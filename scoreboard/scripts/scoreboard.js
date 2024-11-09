@@ -18,7 +18,8 @@
 //////////////
 // PREFETCH //
 //////////////
-// needs to be early, otherwise it is undefined in critical places
+// needs to be early, otherwise it is undefined in critical places.
+// frequency at which the master timer runs (e.g. to check whether we should award a point by osaekomi)
 var master_timer_ms = 10;
 
 /////////////////
@@ -26,25 +27,41 @@ var master_timer_ms = 10;
 /////////////////
 
 var fight_rules = {
+    // General notes:
+    // - All times are in milliseconds and must be multiples of master_timer_ms
+    //   (see above)
+    // - Many settings (e.g., osaekomi_wazari_time, osaekomi_ippon_time,
+    //   osaekomi_warn_unassigned, count_wazaris_towards_ippon) can be set to
+    //   null (without quotation marks) to disable them.
+
     // fight time
     total_fight_time_ms: 5 * 60 * 1000,
+
     // osaekomi times
-    osaekomi_warn_unassigned: 2 * 1000,
-    osaekomi_wazari_time: 10 * 1000,
-    osaekomi_ippon_time: 20 * 1000,
-    osaekomi_max_time: 20 * 1000,
-    // stopping clock
+    osaekomi_warn_unassigned: 2 * 1000, // time to wait before warning that osaekomi was not awarded to a fighter
+    osaekomi_wazari_time: 10 * 1000, // award wazari after this osaekomi time
+    osaekomi_ippon_time: 20 * 1000, // award ippon after this osaekomi time
+    osaekomi_max_time: 20 * 1000, // stop osaekomi after this time (regardless of points)
+
+    // stop fight clock every time a fighter obtains a multiple of a given
+    // point
     stop_clock_on_ippon: 1,
     stop_clock_on_wazari: 2,
     stop_clock_on_shido: 3,
+
+    // stop osaekomi clock every time a fighter obtains a multiple of a given
+    // point
     stop_osaekomi_on_ippon: 1,
     stop_osaekomi_on_wazari: 2,
-    count_wazaris_towards_ippon: 2,
+    count_wazaris_towards_ippon: 2, // count this number of wazaris towards an ippon (so wazaris can contribute to stopping the osaekomi clock on ippon)
+
     // sound
-    osaekomi_error_sound_frequency_ms: 1000,
+    osaekomi_error_sound_frequency_ms: 1000, // frequency of playing the audio reminder to assign an osaekomi fighter
     error_sound_volume: 1,
     win_sound_volume: 1,
-    // keys
+
+    // keys (can disable certain dangerous keys to avoid accidentally pressing
+    // them)
     enable_reset_by_enter: true,
     enable_golden_score_by_g: true,
 }
@@ -53,8 +70,11 @@ var fight_rules = {
 // FIGHT STATE //
 /////////////////
 
+/*
+ * Initialize the fight state (run sanity checks, reset points, reset clocks)
+ */
 function get_initial_fight_state() {
-    /* check that master_timer_ms is compatible with all other time information */
+    // check that master_timer_ms is compatible with all other time information
     console.assert(fight_rules.total_fight_time_ms % master_timer_ms == 0, "Total fight time invalid");
     if (fight_rules.osaekomi_warn_unassigned != null) {
         console.assert(fight_rules.osaekomi_warn_unassigned % master_timer_ms == 0, "Osaekomi warn time invalid");
@@ -103,7 +123,8 @@ var fight_state = get_initial_fight_state();
 /////////////////
 
 /**
- * Performs all necessary updates after a single time step
+ * Performs all necessary updates to the fight state after a single time step of
+ * the master clock.
  */
 function master_timer_tick() {
     if (fight_state.central_clock_running) {
@@ -308,12 +329,15 @@ function osaekomi_reset() {
 // DISPLAY //
 /////////////
 
-const el_point_ids_warned_about = new Set();
+const el_point_ids_warned_about = new Set(); // for details, see usage of this variable
+
+// record the initial size of certain elements, to be able to reset their size later on
 const osaekomi_assign_original_width = document.getElementById('osaekomi_assign_0').style.width;
 const osaekomi_assign_text_original_width = document.getElementById('osaekomi_assign_text').style.width;
 
 
 /**
+ * Update the tooltip text when hovering over an HTML element
  * 
  * @param {*} element The element with the tooltip
  * @param {*} text the new text to put in the tooltip
@@ -369,12 +393,11 @@ function update_display(){
     osaekomi_tenths_el = document.getElementById('osaekomi_time_tenths');
     osaekomi_tenths_el.innerHTML = format_time_tenths(fight_state.osaekomi_ms);
 
-    // reset osaekomi assign
+    // set osaekomi assign correctly
     const assign_0 = document.getElementById('osaekomi_assign_0');
     const assign_1 = document.getElementById('osaekomi_assign_1');
     const assign_text = document.getElementById('osaekomi_assign_text');
     
-    // set osaekomi assign correctly
     assign_0.style.width = osaekomi_assign_original_width;
     assign_1.style.width = osaekomi_assign_original_width;
     assign_text.style.display = null;
@@ -454,7 +477,7 @@ function update_display(){
             const el_point_id = 'point_' + i + '_' + point;
             const el_point = document.getElementById(el_point_id);
             if (el_point == null) {
-                // warn about points not present in the html
+                // warn about points present in the state but not the HTML (detects when a programmer changes the code but does not update the HTML correctly)
                 if (! el_point_ids_warned_about.has(el_point_id)) {
                     el_point_ids_warned_about.add(el_point_id);
                     console.warn("Point", point, "has no tag under id", el_point_id);
@@ -470,6 +493,11 @@ function update_display(){
 // FORMAT TIME //
 /////////////////
 
+/**
+ * 
+ * @param {number} milliseconds - The time in milliseconds to format.
+ * @returns {string} - A string representing the total number of seconds.
+ */
 function format_time_seconds(milliseconds) {
     const total_seconds = Math.floor(milliseconds / 1000);
     return total_seconds.toString();
@@ -603,6 +631,11 @@ function central_clock_set() {
     fight_state.central_clock_ms = central_clock_set_change();
 }
 
+/**
+ * 
+ * @param {HTMLInputElement} input - The HTML input element to extract the number from.
+ * @returns {number} - The number extracted from the input element (0 if empty).
+ */
 function get_number_from_input(input) {
     if (input.value == "") {
         return 0;
@@ -643,6 +676,7 @@ function set_fight_rules() {
 // VIEW //
 //////////
 
+// channel to synchronize between the editor tab and the view-only tab
 const broadcast = new BroadcastChannel("fight_state");
 
 function broadcast_fight_state() {
@@ -684,6 +718,9 @@ window.addEventListener('scroll', () => {
 // KEYS //
 //////////
 
+/**
+ * Register keyboard shortcuts
+ */
 function register_keys() {
     // For an overview of keycodes, see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
 
@@ -792,16 +829,25 @@ function ring_bell() {
 // MASTER TIMER //
 //////////////////
 
-/**
- * A custom timer that compensates for delays, i.e., runs multiple time
- * steps if it is behind schedule
- */
+// Timestamp of the next scheduled master timer tick
 var master_timer_next_tick_ms = null;
+// Stores the maximum delta (difference between expected and actual tick time)
+// reported so far, used for performance monitoring.
 var master_timer_delta_max_reported = 0;
+// Counts the number of times the master timer handler has been called.
 var master_timer_n_calls = 0;
+// Timestamp of the first ever master timer tick
 var master_timer_first_tick_ms;
+// Holds the function to be executed at each master timer tick
 var master_timer_function = null;
+// Holds the function to be executed after each tick, typically for updating the
+// UI or broadcasting the state
 var master_timer_final = null;
+
+/**
+ * A custom timer that compensates for delays, i.e., runs multiple time steps 
+ * if it is behind schedule.
+ */
 function master_timer_handler() {
     if (master_timer_next_tick_ms == null) {
         master_timer_next_tick_ms = window.performance.now();

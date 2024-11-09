@@ -36,7 +36,9 @@ Advantages of this scoreboard:
   - Configuring whether the clock should be stopped on certain events (e.g. upon
     Ippon or upon second Wazari through Osaekomi)
 - The implementation is using standard technologies (HTML, Javascript, CSS
-  including Bootstrap) and is therefore easy to adapt or extend
+  including Bootstrap) and is therefore easy to adapt or extend. The key fight
+  logic is in function `master_timer_tick` of
+  [scoreboard.js](scoreboard/scripts/scoreboard.js).
 
 Disadvantages of this scoreboard:
 
