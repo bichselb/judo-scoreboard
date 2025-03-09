@@ -1,4 +1,3 @@
-
 // Judo Scoreboard for use at judo tournaments.
 // Copyright (C) 2024 Benjamin Bichsel
 
@@ -39,6 +38,7 @@ var fight_rules = {
 
     // osaekomi times
     osaekomi_warn_unassigned: 2 * 1000, // time to wait before warning that osaekomi was not awarded to a fighter
+    osaekomi_yuko_time: 5 * 1000, // award yuko after this osaekomi time
     osaekomi_wazari_time: 10 * 1000, // award wazari after this osaekomi time
     osaekomi_ippon_time: 20 * 1000, // award ippon after this osaekomi time
     osaekomi_max_time: 20 * 1000, // stop osaekomi after this time (regardless of points)
@@ -79,6 +79,9 @@ function get_initial_fight_state() {
     if (fight_rules.osaekomi_warn_unassigned != null) {
         console.assert(fight_rules.osaekomi_warn_unassigned % master_timer_ms == 0, "Osaekomi warn time invalid");
     }
+    if (fight_rules.osaekomi_yuko_time != null) {
+        console.assert(fight_rules.osaekomi_yuko_time % master_timer_ms == 0, "Osaekomi yuko time invalid");
+    }
     if (fight_rules.osaekomi_wazari_time != null) {
         console.assert(fight_rules.osaekomi_wazari_time % master_timer_ms == 0, "Osaekomi wazari time invalid");
     }
@@ -93,11 +96,13 @@ function get_initial_fight_state() {
             0: {
                 'ippon': 0,
                 'wazari': 0,
+                'yuko': 0,
                 'shido': 0
             },
             1: {
                 'ippon': 0,
                 'wazari': 0,
+                'yuko': 0,
                 'shido': 0
             }
     };
@@ -149,9 +154,17 @@ function master_timer_tick() {
         if (fight_state.osaekomi_holder != -1) {
             // award osaekomi points
             if (
+                fight_rules.osaekomi_yuko_time != null &&
+                fight_state.osaekomi_ms == fight_rules.osaekomi_yuko_time
+            ) {
+                add_point(fight_state.osaekomi_holder, 'yuko');
+            }
+
+            if (
                 fight_rules.osaekomi_wazari_time != null &&
                 fight_state.osaekomi_ms == fight_rules.osaekomi_wazari_time
             ) {
+                remove_point(fight_state.osaekomi_holder, 'yuko');
                 add_point(fight_state.osaekomi_holder, 'wazari');
             }
 
@@ -293,6 +306,11 @@ function osaekomi_assign(fighter, start_on_zero=true) {
             fight_state.osaekomi_ms >= fight_rules.osaekomi_wazari_time
         ) {
             remove_point(fight_state.osaekomi_holder, 'wazari');
+        } else if (
+            fight_rules.osaekomi_yuko_time != null &&
+            fight_state.osaekomi_ms >= fight_rules.osaekomi_yuko_time
+        ) {
+            remove_point(fight_state.osaekomi_holder, 'yuko');
         }
     }
 
@@ -309,6 +327,11 @@ function osaekomi_assign(fighter, start_on_zero=true) {
             fight_state.osaekomi_ms >= fight_rules.osaekomi_wazari_time
         ) {
             add_point(fight_state.osaekomi_holder, 'wazari');
+        } else if (
+            fight_rules.osaekomi_yuko_time != null &&
+            fight_state.osaekomi_ms >= fight_rules.osaekomi_yuko_time
+        ) {
+            add_point(fight_state.osaekomi_holder, 'yuko');
         }
     }
 }
@@ -777,19 +800,27 @@ function register_keys() {
             fighter = 0;
             point = 'wazari'
         }
-        if (event.keyCode == 51 || event.keyCode == 99 ) { // 3
+        if (event.keyCode == 51 || event.keyCode == 99) { // 3
             fighter = 0;
-            point = 'shido'
+            point = 'yuko'
         }
         if (event.keyCode == 52 || event.keyCode == 100) { // 4
-            fighter = 1;
-            point = 'ippon';
+            fighter = 0;
+            point = 'shido';
         }
         if (event.keyCode == 53 || event.keyCode == 101) { // 5
             fighter = 1;
-            point = 'wazari';
+            point = 'ippon';
         }
         if (event.keyCode == 54 || event.keyCode == 102) { // 6
+            fighter = 1;
+            point = 'wazari';
+        }
+        if (event.keyCode == 55 || event.keyCode == 103) { // 7
+            fighter = 1;
+            point = 'yuko';
+        }
+        if (event.keyCode == 56 || event.keyCode == 104) { // 8
             fighter = 1;
             point = 'shido';
         }

@@ -33,7 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <table style="background-color: #eeeeee">
                         <tbody>
                             <tr>
-                                <td style="width:35%">
+                                <td style="width:25%">
                                     <div class="point_title">
                                         Ippon
                                     </div>
@@ -53,7 +53,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         >+</button>
                                     </div>
                                 </td>
-                                <td style="width:35%">
+                                <td style="width:25%">
                                     <div class="point_title">
                                         Wazari
                                     </div>
@@ -73,7 +73,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         >+</button>
                                     </div>
                                 </td>
-                                <td style="width:30%">
+                                <td style="width:25%">
+                                    <div class="point_title">
+                                        Yuko
+                                    </div>
+                                    <div class="point">
+                                        <button
+                                            onclick="remove_point(0,'yuko')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Yuko (Shift+3)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(0,'yuko')" id="point_0_yuko">NaN</span>
+                                        <button
+                                            onclick="add_point(0,'yuko')"
+                                            type="button"
+                                            class="btn btn-secondary optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Yuko (3)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                                <td style="width:25%">
                                     <div class="point_title">
                                         Shido
                                     </div>
@@ -82,14 +102,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                             onclick="remove_point(0,'shido')"
                                             type="button"
                                             class="btn btn-secondary optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Shido (Shift+3)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Shido (Shift+4)"
                                         >-</button>
                                         <span class="lh-1" onclick="add_point(0,'shido')" id="point_0_shido">NaN</span>
                                         <button
                                             onclick="add_point(0,'shido')"
                                             type="button"
                                             class="btn btn-secondary optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Shido (3)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Shido (4)"
                                         >+</button>
                                     </div>
                                 </td>
@@ -104,7 +124,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <table style="background-color: #64a7ff">
                         <tbody>
                             <tr>
-                                <td style="width:35%">
+                                <td style="width:25%">
                                     <div class="point_title">
                                         Ippon
                                     </div>
@@ -113,18 +133,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                             onclick="remove_point(1,'ippon')"
                                             type="button"
                                             class="btn btn-light optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Ippon (Shift+4)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Ippon (Shift+5)"
                                         >-</button>
                                         <span class="lh-1" onclick="add_point(1,'ippon')" id="point_1_ippon">NaN</span>
                                         <button
                                             onclick="add_point(1,'ippon')"
                                             type="button"
                                             class="btn btn-light optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Ippon (4)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Ippon (5)"
                                         >+</button>
                                     </div>
                                 </td>
-                                <td style="width:35%">
+                                <td style="width:25%">
                                     <div class="point_title">
                                         Wazari
                                     </div>
@@ -133,18 +153,38 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                             onclick="remove_point(1,'wazari')"
                                             type="button"
                                             class="btn btn-light optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Wazari (Shift+5)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Wazari (Shift+6)"
                                         >-</button>
                                         <span class="lh-1" onclick="add_point(1,'wazari')" id="point_1_wazari">NaN</span>
                                         <button
                                             onclick="add_point(1,'wazari')"
                                             type="button"
                                             class="btn btn-light optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Wazari (5)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Wazari (6)"
                                         >+</button>
                                     </div>
                                 </td>
-                                <td style="width:30%">
+                                <td style="width:25%">
+                                    <div class="point_title">
+                                        Yuko
+                                    </div>
+                                    <div class="point">
+                                        <button
+                                            onclick="remove_point(1,'yuko')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Yuko (Shift+7)"
+                                        >-</button>
+                                        <span class="lh-1" onclick="add_point(1,'yuko')" id="point_1_yuko">NaN</span>
+                                        <button
+                                            onclick="add_point(1,'yuko')"
+                                            type="button"
+                                            class="btn btn-light optional"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Yuko (7)"
+                                        >+</button>
+                                    </div>
+                                </td>
+                                <td style="width:25%">
                                     <div class="point_title">
                                         Shido
                                     </div>
@@ -153,14 +193,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                             onclick="remove_point(1,'shido')"
                                             type="button"
                                             class="btn btn-light optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Shido (Shift+6)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove Shido (Shift+8)"
                                         >-</button>
                                         <span class="lh-1" onclick="add_point(1,'shido')" id="point_1_shido">NaN</span>
                                         <button
                                             onclick="add_point(1,'shido')"
                                             type="button"
                                             class="btn btn-light optional"
-                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Shido (6)"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add Shido (8)"
                                         >+</button>
                                     </div>
                                 </td>
@@ -401,15 +441,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>Ippon</td>
-                    <td>1 (white) or 4 (blue)</td>
+                    <td>1 (white) or 5 (blue)</td>
                 </tr>
                 <tr>
                     <td>Wazari</td>
-                    <td>2 (white) or 5 (blue)</td>
+                    <td>2 (white) or 6 (blue)</td>
+                </tr>
+                <tr>
+                    <td>Yuko</td>
+                    <td>3 (white) or 7 (blue)</td>
                 </tr>
                 <tr>
                     <td>Shido</td>
-                    <td>3 (white) or 6 (blue)</td>
+                    <td>4 (white) or 8 (blue)</td>
                 </tr>
                 <tr>
                     <td>Next fight (reset scoreboard)</td>
