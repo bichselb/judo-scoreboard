@@ -32,7 +32,7 @@ Advantages of this scoreboard:
   configurations](https://bichselb.github.io/judo-scoreboard/scoreboard/#config),
   such as:
   - Awarding more than one Ippon
-  - Configuring whether and when to auto-award Wazari or Ippon during Osaekomi
+  - Configuring whether and when to auto-award Yuko/Wazari/Ippon during Osaekomi
   - Configuring whether the clock should be stopped on certain events (e.g. upon
     Ippon or upon second Wazari through Osaekomi)
 - The [AGPL license](./LICENSE.md) ensures the software is free to use, modify,
